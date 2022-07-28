@@ -16,7 +16,7 @@ class ApiService {
       if (response.statusCode == 200) {
         data = convert.jsonDecode(response.body);
         result = data.map((value) => value as Map<String, dynamic>).toList();
-        print('data   ${response.body}');
+       // print('data   ${result}');
         return result;
       }
     } catch (e) {

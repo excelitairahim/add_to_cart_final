@@ -41,7 +41,10 @@ class MyTabbedPage extends StatefulWidget {
 
 class _MyTabbedPageState extends State<MyTabbedPage>
     with SingleTickerProviderStateMixin {
+  List<Map<String, dynamic>> juwerieslist = [];
+
   static const List<Tab> myTabs = <Tab>[
+    Tab(text: 'All'),
     Tab(text: 'Men'),
     Tab(text: 'Jewelery'),
     Tab(text: 'Women'),
@@ -58,6 +61,13 @@ class _MyTabbedPageState extends State<MyTabbedPage>
 
     super.initState();
     _tabController = TabController(vsync: this, length: myTabs.length);
+
+    final index1 = productProvider.data_list.indexWhere(
+      (element) => element['category'] == 'jewelery',
+    );
+    if (index1 != -1) {
+      print('index $index1:${productProvider.data_list[index1]}');
+    }
   }
 
   @override
@@ -71,6 +81,19 @@ class _MyTabbedPageState extends State<MyTabbedPage>
     ProductProvider productProvider = Provider.of<ProductProvider>(
       context,
     );
+   productProvider.data_list .asMap().entries.map((entry) {
+    int idx = entry.key;
+   print('sssskkkkkk$idx');
+
+   return idx;
+});
+    //print('hhhhhhhhhhh${productProvider.data_list[0]}');
+    Set<String> categoriesNames = {};
+    List categories = [];
+    productProvider.data_list
+        .forEach((location) => categoriesNames.add(location['category']));
+   // print('ssssssssssssssss$categoriesNames');
+
     return Scaffold(
       appBar: AppBar(
         bottom: TabBar(
@@ -82,64 +105,140 @@ class _MyTabbedPageState extends State<MyTabbedPage>
         SingleChildScrollView(
           child: Column(
             children: [
-              ListView.builder(
+              GridView.builder(
                   itemCount: productProvider.data_list.length,
-                  shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
-                  itemExtent: 120,
-                  itemBuilder: ((context, index) {
+                  shrinkWrap: true,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    childAspectRatio: 1,
+                  ),
+                  itemBuilder: (context, index) {
                     return Card(
-                      child: Row(
-                        children: [
-                          Container(
-                              child: productProvider.data_list[index]
-                                              ['category']
-                                          .toString() ==
-                                      'men\'s clothing'
-                                  ? Image.network(productProvider
-                                      .data_list[index]['image']
-                                      .toString())
-                                  : Container()),
-                          // Text(productProvider.data_list[index]['title']
-                          //     .toString())
-                        ],
-                      ),
-                    );
-                  }))
+                        child: Column(
+                      children: [
+                        Expanded(
+                          child: Container(
+                              child: Image.network(productProvider
+                                  .data_list[index]['image']
+                                  .toString())),
+                        ),
+                        Text(productProvider.data_list[index]['title']
+                            .toString())
+                      ],
+                    ));
+                  })
             ],
           ),
         ),
         SingleChildScrollView(
           child: Column(
             children: [
-              ListView.builder(
-                  itemCount: productProvider.data_list.length,
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemExtent: 120,
-                  itemBuilder: ((context, index) {
-                    return Card(
-                      child: Row(
-                        children: [
-                          Container(
-                              child: productProvider.data_list[index]
-                                              ['category']
+              GridView.builder(
+                itemCount: productProvider.data_list.length,
+                shrinkWrap: true,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  childAspectRatio: 1,
+                ),
+                itemBuilder: (context, index) {
+                  return productProvider.data_list[index]['category']
+                              .toString() ==
+                          'men\'s clothing'
+                      ? Card(
+                          child: Column(
+                            children: [
+                              Expanded(
+                                child: Container(
+                                    child: productProvider.data_list[index]
+                                                    ['category']
+                                                .toString() ==
+                                            'men\'s clothing'
+                                        ? Image.network(productProvider
+                                            .data_list[index]['image']
+                                            .toString())
+                                        : Container()),
+                              ),
+                              productProvider.data_list[index]['category']
                                           .toString() ==
-                                      'jewelery'
-                                  ? Image.network(productProvider
-                                      .data_list[index]['image']
+                                      'men\'s clothing'
+                                  ? Text(productProvider.data_list[index]
+                                          ['title']
                                       .toString())
-                                  : Container()),
-                          // Text(productProvider.data_list[index]['title']
-                          //     .toString())
-                        ],
-                      ),
-                    );
-                  }))
+                                  : Container()
+                            ],
+                          ),
+                        )
+                      : SizedBox(
+                          height: 80,
+                        );
+                },
+              )
+
+              // ListView.builder(
+              //     itemCount: productProvider.data_list.length,
+              //     shrinkWrap: true,
+              //     physics: NeverScrollableScrollPhysics(),
+              //     itemExtent: 120,
+              //     itemBuilder: ((context, index) {
+              //       return productProvider.data_list[index]
+              //                                 ['category']
+              //                             .toString() ==
+              //                         'men\'s clothing'
+              //                     ?  Card(
+              //         child: Row(
+              //           children: [
+              //             Container(
+              //                 child: productProvider.data_list[index]
+              //                                 ['category']
+              //                             .toString() ==
+              //                         'men\'s clothing'
+              //                     ? Image.network(productProvider
+              //                         .data_list[index]['image']
+              //                         .toString())
+              //                     : Container()),
+              //              productProvider.data_list[index]
+              //                                 ['category']
+              //                             .toString() ==
+              //                         'men\'s clothing'
+              //                     ?  Text(productProvider.data_list[index]['title']
+              //                  .toString()):Container()
+              //           ],
+              //         ),
+              //       ):SizedBox(height: 80,);
+              //     }))
             ],
           ),
         ),
-     SingleChildScrollView(
+        SingleChildScrollView(
+          child: Column(
+            children: [
+              GridView.builder(
+                  itemCount: juwerieslist.length,
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    childAspectRatio: 1,
+                  ),
+                  itemBuilder: (context, index) {
+                    return Card(
+                      child: Column(
+                        children: [
+                          Container(
+                              child: Expanded(
+                            child: Image.network(
+                                juwerieslist[index]['image'].toString()),
+                          )),
+                          Text(juwerieslist[index]['title'].toString())
+                        ],
+                      ),
+                    );
+                  })
+            ],
+          ),
+        ),
+        SingleChildScrollView(
           child: Column(
             children: [
               ListView.builder(
@@ -159,7 +258,9 @@ class _MyTabbedPageState extends State<MyTabbedPage>
                                   ? Image.network(productProvider
                                       .data_list[index]['image']
                                       .toString())
-                                  : Container()),
+                                  : SizedBox(
+                                      height: 1,
+                                    )),
                           // Text(productProvider.data_list[index]['title']
                           //     .toString())
                         ],
@@ -169,32 +270,21 @@ class _MyTabbedPageState extends State<MyTabbedPage>
             ],
           ),
         ),
-       SingleChildScrollView(
+        SingleChildScrollView(
           child: Column(
             children: [
               ListView.builder(
-                  itemCount: productProvider.data_list.length,
+                  itemCount: 4,
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
                   itemExtent: 120,
                   itemBuilder: ((context, index) {
-                    return Card(
-                      child: Row(
-                        children: [
-                          Container(
-                              child: productProvider.data_list[index]
-                                              ['category']
-                                          .toString() ==
-                                      'electronics'
-                                  ? Image.network(productProvider
-                                      .data_list[index]['image']
-                                      .toString())
-                                  : Container()),
-                          // Text(productProvider.data_list[index]['category']
-                          //     .toString())
-                        ],
-                      ),
-                    );
+                    return Container(
+                        child: categoriesNames == 'men\'s clothing'
+                            ? Text(categoriesNames.first)
+                            : Container(
+                                color: Colors.amber,
+                              ));
                   }))
             ],
           ),
