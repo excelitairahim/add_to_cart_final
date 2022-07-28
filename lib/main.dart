@@ -44,6 +44,8 @@ class _MyTabbedPageState extends State<MyTabbedPage>
   List<Map<String, dynamic>> juwerieslist = [];
 
   static const List<Tab> myTabs = <Tab>[
+
+    
     Tab(text: 'All'),
     Tab(text: 'Men'),
     Tab(text: 'Jewelery'),
@@ -62,12 +64,7 @@ class _MyTabbedPageState extends State<MyTabbedPage>
     super.initState();
     _tabController = TabController(vsync: this, length: myTabs.length);
 
-    final index1 = productProvider.data_list.indexWhere(
-      (element) => element['category'] == 'jewelery',
-    );
-    if (index1 != -1) {
-      print('index $index1:${productProvider.data_list[index1]}');
-    }
+ 
   }
 
   @override
@@ -81,13 +78,9 @@ class _MyTabbedPageState extends State<MyTabbedPage>
     ProductProvider productProvider = Provider.of<ProductProvider>(
       context,
     );
-   productProvider.data_list .asMap().entries.map((entry) {
-    int idx = entry.key;
-   print('sssskkkkkk$idx');
-
-   return idx;
-});
-    //print('hhhhhhhhhhh${productProvider.data_list[0]}');
+  var data=productProvider.data_list.where((element) => element['category']=='jewelery' );
+    
+    print('hhhhhhhhhhh${data}');
     Set<String> categoriesNames = {};
     List categories = [];
     productProvider.data_list
