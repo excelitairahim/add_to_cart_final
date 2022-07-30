@@ -5,7 +5,7 @@ import 'package:shopping_cart_app/model/productmodel.dart';
 import 'package:shopping_cart_app/screens/product_list.dart';
 
 class ApiService {
-  Future<List<Map<String, dynamic>>> getdata() async {
+  Future<  List<Map<String, dynamic>>> getdata() async {
     List<Map<String, dynamic>>? result = [];
     List<dynamic> data = [];
 

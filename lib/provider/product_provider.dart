@@ -3,7 +3,7 @@ import 'package:shopping_cart_app/api_service.dart';
 import 'package:shopping_cart_app/model/productmodel.dart';
 
 class ProductProvider extends ChangeNotifier {
-  List<Map<String, dynamic>> data_list = [];
+  List<Map<String,dynamic>> data_list = [];
   bool isloading = false;
   getdata() async {
     var data = await ApiService().getdata();
@@ -11,18 +11,18 @@ class ProductProvider extends ChangeNotifier {
 
 // List <List<Map<String,dynamic>>> data_again=[];
 
-    Map<String, Map<String, dynamic>> data_again = Map();
+  //   Map<String, Map<String, dynamic>> data_again = Map();
 
-    data.forEach((element) {
+  //   data.forEach((element) {
      
-   Map<String, dynamic>? temp = Map();
+  //  Map<String, dynamic>? temp = Map();
 
-      temp = data_again[element['category']];
-      temp![element['a']] = element;
-      var map = data_again[element['category']] = temp;
-    });
+  //     temp = data_again[element['category']];
+  //     temp![element['a']] = element;
+  //     var map = data_again[element['category']] = temp;
+  //   });
 
-    print('data final  $data_again');
+  //   print('data final  $data_again');
 
     notifyListeners();
   }

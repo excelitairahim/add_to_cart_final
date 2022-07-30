@@ -41,11 +41,9 @@ class MyTabbedPage extends StatefulWidget {
 
 class _MyTabbedPageState extends State<MyTabbedPage>
     with SingleTickerProviderStateMixin {
-  List<Map<String, dynamic>> juwerieslist = [];
+  //List<Map<String, dynamic>> juwerieslist = [];
 
   static const List<Tab> myTabs = <Tab>[
-
-    
     Tab(text: 'All'),
     Tab(text: 'Men'),
     Tab(text: 'Jewelery'),
@@ -63,8 +61,6 @@ class _MyTabbedPageState extends State<MyTabbedPage>
 
     super.initState();
     _tabController = TabController(vsync: this, length: myTabs.length);
-
- 
   }
 
   @override
@@ -78,15 +74,22 @@ class _MyTabbedPageState extends State<MyTabbedPage>
     ProductProvider productProvider = Provider.of<ProductProvider>(
       context,
     );
-  var data=productProvider.data_list.where((element) => element['category']=='jewelery' );
-    
-    print('hhhhhhhhhhh${data}');
-    Set<String> categoriesNames = {};
-    List categories = [];
-    productProvider.data_list
-        .forEach((location) => categoriesNames.add(location['category']));
-   // print('ssssssssssssssss$categoriesNames');
 
+    var women = productProvider.data_list
+        .where(
+          (element) => element['category'] == 'women\'s clothing',
+        )
+        .toList();
+         var jewelery = productProvider.data_list
+        .where(
+          (element) => element['category'] == 'jewelery',
+        )
+        .toList();
+
+    // print('women ${data}');
+    // print('women ${data.length}');
+    // print(data[0]['title']);
+  
     return Scaffold(
       appBar: AppBar(
         bottom: TabBar(
@@ -107,6 +110,10 @@ class _MyTabbedPageState extends State<MyTabbedPage>
                     childAspectRatio: 1,
                   ),
                   itemBuilder: (context, index) {
+                    // var data=  productProvider.data_list.where((element) => element['category']=='men\'s clothing',);
+
+                    // print('hhh${data}');
+                    // print(data.length);
                     return Card(
                         child: Column(
                       children: [
@@ -207,7 +214,7 @@ class _MyTabbedPageState extends State<MyTabbedPage>
           child: Column(
             children: [
               GridView.builder(
-                  itemCount: juwerieslist.length,
+                  itemCount: jewelery.length,
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -221,9 +228,9 @@ class _MyTabbedPageState extends State<MyTabbedPage>
                           Container(
                               child: Expanded(
                             child: Image.network(
-                                juwerieslist[index]['image'].toString()),
+                                jewelery[index]['image'].toString()),
                           )),
-                          Text(juwerieslist[index]['title'].toString())
+                          Text(jewelery[index]['title'].toString())
                         ],
                       ),
                     );
@@ -234,32 +241,28 @@ class _MyTabbedPageState extends State<MyTabbedPage>
         SingleChildScrollView(
           child: Column(
             children: [
-              ListView.builder(
-                  itemCount: productProvider.data_list.length,
-                  shrinkWrap: true,
+              GridView.builder(
+                  itemCount: women.length,
                   physics: NeverScrollableScrollPhysics(),
-                  itemExtent: 120,
-                  itemBuilder: ((context, index) {
+                  shrinkWrap: true,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    childAspectRatio: 1,
+                  ),
+                  itemBuilder: (context, index) {
                     return Card(
-                      child: Row(
+                      child: Column(
                         children: [
-                          Container(
-                              child: productProvider.data_list[index]
-                                              ['category']
-                                          .toString() ==
-                                      'women\'s clothing'
-                                  ? Image.network(productProvider
-                                      .data_list[index]['image']
-                                      .toString())
-                                  : SizedBox(
-                                      height: 1,
-                                    )),
-                          // Text(productProvider.data_list[index]['title']
-                          //     .toString())
+                          Expanded(
+                            child: Container(
+                                child: Image.network(
+                                    women[index]['image'].toString())),
+                          ),
+                          Text(women[index]['title'].toString())
                         ],
                       ),
                     );
-                  }))
+                  })
             ],
           ),
         ),
@@ -273,11 +276,12 @@ class _MyTabbedPageState extends State<MyTabbedPage>
                   itemExtent: 120,
                   itemBuilder: ((context, index) {
                     return Container(
-                        child: categoriesNames == 'men\'s clothing'
-                            ? Text(categoriesNames.first)
-                            : Container(
-                                color: Colors.amber,
-                              ));
+                        // child: categoriesNames == 'men\'s clothing'
+                        //     ? Text(categoriesNames.first)
+                        //     : Container(
+                        //         color: Colors.amber,
+                        //       )
+                        );
                   }))
             ],
           ),
