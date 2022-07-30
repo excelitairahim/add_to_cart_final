@@ -27,8 +27,282 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: MyTabbedPage(),
+        home: MyHomePage(),
       ),
+    );
+  }
+}
+
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({Key? key}) : super(key: key);
+  @override
+  _MyHomePageState createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  @override
+  void initState() {
+    ProductProvider productProvider =
+        Provider.of<ProductProvider>(context, listen: false);
+    productProvider.getdata();
+
+    super.initState();
+  }
+
+  Widget build(BuildContext context) {
+    ProductProvider productProvider = Provider.of<ProductProvider>(
+      context,
+    );
+    List men = productProvider.data_list
+        .where(
+          (element) => element['category'] == 'men\'s clothing',
+        )
+        .toList();
+    List women = productProvider.data_list
+        .where(
+          (element) => element['category'] == 'women\'s clothing',
+        )
+        .toList();
+    List jewelery = productProvider.data_list
+        .where(
+          (element) => element['category'] == 'jewelery',
+        )
+        .toList();
+    List electrics = productProvider.data_list
+        .where(
+          (element) => element['category'] == 'electronics',
+        )
+        .toList();
+
+    // print('women ${data}');
+    // print('women ${data.length}');
+    // print(data[0]['title']);
+
+    return DefaultTabController(
+      length: 5,
+      child: Scaffold(
+          appBar: AppBar(
+            centerTitle: true,
+            backgroundColor: Colors.grey,
+            elevation: 0,
+            title: Text("BPPSHOP "),
+          ),
+          body: Padding(
+            padding: EdgeInsets.all(3.0),
+            child: Column(
+              children: [
+                Container(width: double.infinity,
+                  height: 45,
+                  decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                      borderRadius: BorderRadius.circular(10.0)),
+                  child: TabBar(padding: EdgeInsets.symmetric(horizontal: 0),
+                   // isScrollable: true,
+                    indicator: BoxDecoration(
+                        color: Color.fromRGBO(102, 117, 102, 1),
+                        borderRadius: BorderRadius.circular(5.0)),
+                    labelColor: Colors.white,
+                    unselectedLabelColor: Colors.black,
+                    tabs: const [
+                      Tab(text: 'All'),
+                      Tab(text: 'Men'),
+                      Tab(text: 'Jewelery'),
+                      Tab(text: 'Women'),
+                      Tab(text: 'Electics'),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: TabBarView(children: [
+                    SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          GridView.builder(
+                              itemCount: productProvider.data_list.length,
+                              physics: NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                childAspectRatio: 1,
+                              ),
+                              itemBuilder: (context, index) {
+                                productProvider.data_list.sort(
+                                    (a, b) => a['price'].compareTo(b['price']));
+                                for (var p in productProvider.data_list) {
+                                  print(p['price']);
+                                }
+                                return Card(
+                                    child: Column(
+                                  children: [
+                                    Expanded(
+                                      child: Container(
+                                          child: Image.network(productProvider
+                                              .data_list[index]['image']
+                                              .toString())),
+                                    ),
+                                    Text(
+                                      productProvider.data_list[index]['title']
+                                          .toString(),
+                                      style: TextStyle(),
+                                    ),
+                                    Text(
+                                      'Price ${productProvider.data_list[index]['price'].toString()}',
+                                      style: TextStyle(),
+                                    )
+                                  ],
+                                ));
+                              })
+                        ],
+                      ),
+                    ),
+                    SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          GridView.builder(
+                              itemCount: men.length,
+                              physics: NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                childAspectRatio: 1,
+                              ),
+                              itemBuilder: (context, index) {
+                                // men.sort((a, b) => a['price'].compareTo(b['price']));
+                                // for (var p in men) {
+                                //  // print(p['price']);
+                                // }
+                                return Card(
+                                    child: Column(
+                                  children: [
+                                    Expanded(
+                                      child: Container(
+                                          child: Image.network(
+                                              men[index]['image'].toString())),
+                                    ),
+                                    Text(
+                                      men[index]['title'].toString(),
+                                      style: TextStyle(),
+                                    ),
+                                    Text(
+                                      'Price ${men[index]['price'].toString()}',
+                                      style: TextStyle(),
+                                    )
+                                  ],
+                                ));
+                              })
+                        ],
+                      ),
+                    ),
+                    SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          GridView.builder(
+                              itemCount: jewelery.length,
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                childAspectRatio: 1,
+                              ),
+                              itemBuilder: (context, index) {
+                                return Card(
+                                  child: Column(
+                                    children: [
+                                      Container(
+                                          child: Expanded(
+                                        child: Image.network(jewelery[index]
+                                                ['image']
+                                            .toString()),
+                                      )),
+                                      Text(jewelery[index]['title'].toString()),
+                                      Text(
+                                        'Price ${jewelery[index]['price'].toString()}',
+                                        style: TextStyle(),
+                                      )
+                                    ],
+                                  ),
+                                );
+                              })
+                        ],
+                      ),
+                    ),
+                    SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          GridView.builder(
+                              itemCount: women.length,
+                              physics: NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                childAspectRatio: 1,
+                              ),
+                              itemBuilder: (context, index) {
+                                return Card(
+                                  child: Column(
+                                    children: [
+                                      Expanded(
+                                        child: Container(
+                                            child: Image.network(women[index]
+                                                    ['image']
+                                                .toString())),
+                                      ),
+                                      Text(women[index]['title'].toString()),
+                                      Text(
+                                        'Price ${women[index]['price'].toString()}',
+                                        style: TextStyle(),
+                                      )
+                                    ],
+                                  ),
+                                );
+                              })
+                        ],
+                      ),
+                    ),
+                    SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          GridView.builder(
+                              itemCount: electrics.length,
+                              physics: NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                childAspectRatio: 1,
+                              ),
+                              itemBuilder: (context, index) {
+                                return Card(
+                                  child: Column(
+                                    children: [
+                                      Expanded(
+                                        child: Container(
+                                            child: Image.network(
+                                                electrics[index]['image']
+                                                    .toString())),
+                                      ),
+                                      Text(
+                                          electrics[index]['title'].toString()),
+                                      Text(
+                                        'Price ${electrics[index]['price'].toString()}',
+                                        style: TextStyle(),
+                                      )
+                                    ],
+                                  ),
+                                );
+                              })
+                        ],
+                      ),
+                    ),
+                  ]),
+                )
+              ],
+            ),
+          )),
     );
   }
 }
@@ -74,218 +348,245 @@ class _MyTabbedPageState extends State<MyTabbedPage>
     ProductProvider productProvider = Provider.of<ProductProvider>(
       context,
     );
-
-    var women = productProvider.data_list
+    List men = productProvider.data_list
+        .where(
+          (element) => element['category'] == 'men\'s clothing',
+        )
+        .toList();
+    List women = productProvider.data_list
         .where(
           (element) => element['category'] == 'women\'s clothing',
         )
         .toList();
-         var jewelery = productProvider.data_list
+    List jewelery = productProvider.data_list
         .where(
           (element) => element['category'] == 'jewelery',
+        )
+        .toList();
+    List electrics = productProvider.data_list
+        .where(
+          (element) => element['category'] == 'electronics',
         )
         .toList();
 
     // print('women ${data}');
     // print('women ${data.length}');
     // print(data[0]['title']);
-  
+
     return Scaffold(
+      // extendBodyBehindAppBar: true,
       appBar: AppBar(
+        // toolbarHeight: 80,
+        // flexibleSpace: Container(decoration: BoxDecoration(
+        //  // color: LinearGradient(colors: [])
+        // ),),
+        // backgroundColor:Color(0xffFF6000),
+        title: AppBar(
+          title: Text(' BPPSHOP'),
+        ),
         bottom: TabBar(
+          isScrollable: true,
           controller: _tabController,
           tabs: myTabs,
         ),
       ),
-      body: TabBarView(controller: _tabController, children: [
-        SingleChildScrollView(
-          child: Column(
-            children: [
-              GridView.builder(
-                  itemCount: productProvider.data_list.length,
-                  physics: NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    childAspectRatio: 1,
-                  ),
-                  itemBuilder: (context, index) {
-                    // var data=  productProvider.data_list.where((element) => element['category']=='men\'s clothing',);
+      body: CustomScrollView(slivers: [
+        SliverAppBar(
+          expandedHeight: 220.0,
+          floating: true,
+          pinned: true,
+          snap: true,
+          elevation: 50,
+          backgroundColor: Colors.pink,
+          flexibleSpace: FlexibleSpaceBar(
+              centerTitle: true,
+              title: Text('Title',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16.0,
+                  )),
+              background: Image.network(
+                'https://images.pexels.com/photos/443356/pexels-photo-443356.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940',
+                fit: BoxFit.cover,
+              )),
+        ),
 
-                    // print('hhh${data}');
-                    // print(data.length);
-                    return Card(
-                        child: Column(
-                      children: [
-                        Expanded(
-                          child: Container(
-                              child: Image.network(productProvider
-                                  .data_list[index]['image']
-                                  .toString())),
-                        ),
-                        Text(productProvider.data_list[index]['title']
-                            .toString())
-                      ],
-                    ));
-                  })
-            ],
-          ),
-        ),
-        SingleChildScrollView(
-          child: Column(
-            children: [
-              GridView.builder(
-                itemCount: productProvider.data_list.length,
-                shrinkWrap: true,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 1,
-                ),
-                itemBuilder: (context, index) {
-                  return productProvider.data_list[index]['category']
-                              .toString() ==
-                          'men\'s clothing'
-                      ? Card(
-                          child: Column(
-                            children: [
-                              Expanded(
-                                child: Container(
-                                    child: productProvider.data_list[index]
-                                                    ['category']
-                                                .toString() ==
-                                            'men\'s clothing'
-                                        ? Image.network(productProvider
-                                            .data_list[index]['image']
-                                            .toString())
-                                        : Container()),
-                              ),
-                              productProvider.data_list[index]['category']
-                                          .toString() ==
-                                      'men\'s clothing'
-                                  ? Text(productProvider.data_list[index]
-                                          ['title']
-                                      .toString())
-                                  : Container()
-                            ],
-                          ),
-                        )
-                      : SizedBox(
-                          height: 80,
-                        );
-                },
-              )
-
-              // ListView.builder(
-              //     itemCount: productProvider.data_list.length,
-              //     shrinkWrap: true,
-              //     physics: NeverScrollableScrollPhysics(),
-              //     itemExtent: 120,
-              //     itemBuilder: ((context, index) {
-              //       return productProvider.data_list[index]
-              //                                 ['category']
-              //                             .toString() ==
-              //                         'men\'s clothing'
-              //                     ?  Card(
-              //         child: Row(
-              //           children: [
-              //             Container(
-              //                 child: productProvider.data_list[index]
-              //                                 ['category']
-              //                             .toString() ==
-              //                         'men\'s clothing'
-              //                     ? Image.network(productProvider
-              //                         .data_list[index]['image']
-              //                         .toString())
-              //                     : Container()),
-              //              productProvider.data_list[index]
-              //                                 ['category']
-              //                             .toString() ==
-              //                         'men\'s clothing'
-              //                     ?  Text(productProvider.data_list[index]['title']
-              //                  .toString()):Container()
-              //           ],
-              //         ),
-              //       ):SizedBox(height: 80,);
-              //     }))
-            ],
-          ),
-        ),
-        SingleChildScrollView(
-          child: Column(
-            children: [
-              GridView.builder(
-                  itemCount: jewelery.length,
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    childAspectRatio: 1,
-                  ),
-                  itemBuilder: (context, index) {
-                    return Card(
-                      child: Column(
-                        children: [
-                          Container(
-                              child: Expanded(
-                            child: Image.network(
-                                jewelery[index]['image'].toString()),
-                          )),
-                          Text(jewelery[index]['title'].toString())
-                        ],
-                      ),
-                    );
-                  })
-            ],
-          ),
-        ),
-        SingleChildScrollView(
-          child: Column(
-            children: [
-              GridView.builder(
-                  itemCount: women.length,
-                  physics: NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    childAspectRatio: 1,
-                  ),
-                  itemBuilder: (context, index) {
-                    return Card(
-                      child: Column(
-                        children: [
-                          Expanded(
-                            child: Container(
-                                child: Image.network(
-                                    women[index]['image'].toString())),
-                          ),
-                          Text(women[index]['title'].toString())
-                        ],
-                      ),
-                    );
-                  })
-            ],
-          ),
-        ),
-        SingleChildScrollView(
-          child: Column(
-            children: [
-              ListView.builder(
-                  itemCount: 4,
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemExtent: 120,
-                  itemBuilder: ((context, index) {
-                    return Container(
-                        // child: categoriesNames == 'men\'s clothing'
-                        //     ? Text(categoriesNames.first)
-                        //     : Container(
-                        //         color: Colors.amber,
-                        //       )
-                        );
-                  }))
-            ],
-          ),
-        ),
+        //   TabBarView(controller: _tabController, children: [
+        //   SingleChildScrollView(
+        //     child: Column(
+        //       children: [
+        //         GridView.builder(
+        //             itemCount: productProvider.data_list.length,
+        //             physics: NeverScrollableScrollPhysics(),
+        //             shrinkWrap: true,
+        //             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        //               crossAxisCount: 2,
+        //               childAspectRatio: 1,
+        //             ),
+        //             itemBuilder: (context, index) {
+        //               productProvider.data_list
+        //                   .sort((a, b) => a['price'].compareTo(b['price']));
+        //               for (var p in productProvider.data_list) {
+        //                 print(p['price']);
+        //               }
+        //               return Card(
+        //                   child: Column(
+        //                 children: [
+        //                   Expanded(
+        //                     child: Container(
+        //                         child: Image.network(productProvider
+        //                             .data_list[index]['image']
+        //                             .toString())),
+        //                   ),
+        //                   Text(
+        //                     productProvider.data_list[index]['title'].toString(),
+        //                     style: TextStyle(),
+        //                   ),
+        //                   Text(
+        //                     'Price ${productProvider.data_list[index]['price'].toString()}',
+        //                     style: TextStyle(),
+        //                   )
+        //                 ],
+        //               ));
+        //             })
+        //       ],
+        //     ),
+        //   ),
+        //   SingleChildScrollView(
+        //     child: Column(
+        //       children: [
+        //         GridView.builder(
+        //             itemCount: men.length,
+        //             physics: NeverScrollableScrollPhysics(),
+        //             shrinkWrap: true,
+        //             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        //               crossAxisCount: 2,
+        //               childAspectRatio: 1,
+        //             ),
+        //             itemBuilder: (context, index) {
+        //               // men.sort((a, b) => a['price'].compareTo(b['price']));
+        //               // for (var p in men) {
+        //               //  // print(p['price']);
+        //               // }
+        //               return Card(
+        //                   child: Column(
+        //                 children: [
+        //                   Expanded(
+        //                     child: Container(
+        //                         child: Image.network(
+        //                             men[index]['image'].toString())),
+        //                   ),
+        //                   Text(
+        //                     men[index]['title'].toString(),
+        //                     style: TextStyle(),
+        //                   ),
+        //                   Text(
+        //                     'Price ${men[index]['price'].toString()}',
+        //                     style: TextStyle(),
+        //                   )
+        //                 ],
+        //               ));
+        //             })
+        //       ],
+        //     ),
+        //   ),
+        //   SingleChildScrollView(
+        //     child: Column(
+        //       children: [
+        //         GridView.builder(
+        //             itemCount: jewelery.length,
+        //             shrinkWrap: true,
+        //             physics: NeverScrollableScrollPhysics(),
+        //             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        //               crossAxisCount: 2,
+        //               childAspectRatio: 1,
+        //             ),
+        //             itemBuilder: (context, index) {
+        //               return Card(
+        //                 child: Column(
+        //                   children: [
+        //                     Container(
+        //                         child: Expanded(
+        //                       child: Image.network(
+        //                           jewelery[index]['image'].toString()),
+        //                     )),
+        //                     Text(jewelery[index]['title'].toString()),
+        //                     Text(
+        //                       'Price ${jewelery[index]['price'].toString()}',
+        //                       style: TextStyle(),
+        //                     )
+        //                   ],
+        //                 ),
+        //               );
+        //             })
+        //       ],
+        //     ),
+        //   ),
+        //   SingleChildScrollView(
+        //     child: Column(
+        //       children: [
+        //         GridView.builder(
+        //             itemCount: women.length,
+        //             physics: NeverScrollableScrollPhysics(),
+        //             shrinkWrap: true,
+        //             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        //               crossAxisCount: 2,
+        //               childAspectRatio: 1,
+        //             ),
+        //             itemBuilder: (context, index) {
+        //               return Card(
+        //                 child: Column(
+        //                   children: [
+        //                     Expanded(
+        //                       child: Container(
+        //                           child: Image.network(
+        //                               women[index]['image'].toString())),
+        //                     ),
+        //                     Text(women[index]['title'].toString()),
+        //                     Text(
+        //                       'Price ${women[index]['price'].toString()}',
+        //                       style: TextStyle(),
+        //                     )
+        //                   ],
+        //                 ),
+        //               );
+        //             })
+        //       ],
+        //     ),
+        //   ),
+        //   SingleChildScrollView(
+        //     child: Column(
+        //       children: [
+        //         GridView.builder(
+        //             itemCount: electrics.length,
+        //             physics: NeverScrollableScrollPhysics(),
+        //             shrinkWrap: true,
+        //             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        //               crossAxisCount: 2,
+        //               childAspectRatio: 1,
+        //             ),
+        //             itemBuilder: (context, index) {
+        //               return Card(
+        //                 child: Column(
+        //                   children: [
+        //                     Expanded(
+        //                       child: Container(
+        //                           child: Image.network(
+        //                               electrics[index]['image'].toString())),
+        //                     ),
+        //                     Text(electrics[index]['title'].toString()),
+        //                     Text(
+        //                       'Price ${electrics[index]['price'].toString()}',
+        //                       style: TextStyle(),
+        //                     )
+        //                   ],
+        //                 ),
+        //               );
+        //             })
+        //       ],
+        //     ),
+        //   ),
+        // ]),
       ]),
     );
   }
